@@ -1,0 +1,63 @@
+{{- range $name, $config := .Values.workloads }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tm-app.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "tm-app.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  replicas: {{ default 1 $config.replicas }}
+  selector:
+    matchLabels:
+      {{- include "tm-app.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: {{ $name }}
+  template:
+    metadata:
+      labels:
+        {{- include "tm-app.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ $name }}
+    spec:
+      serviceAccountName: {{ default "backend-sa" $config.serviceAccountName }}
+      containers:
+        - name: {{ $name }}
+          image: "{{ $.Values.image.repository }}@{{ $.Values.image.digest }}"
+{{- if $config.command }}
+          command:
+{{ toYaml $config.command | nindent 12 }}
+{{- end }}
+{{- if $config.args }}
+          args:
+{{ toYaml $config.args | nindent 12 }}
+{{- end }}
+{{- if $config.resources }}
+          resources:
+{{ toYaml $config.resources | nindent 12 }}
+{{- end }}
+{{- if or (and $config.envFrom $config.envFrom.secretName) (and $config.envFrom $config.envFrom.configMapName) }}
+          envFrom:
+{{- if and $config.envFrom $config.envFrom.secretName }}
+            - secretRef:
+                name: {{ $config.envFrom.secretName }}
+{{- end }}
+{{- if and $config.envFrom $config.envFrom.configMapName }}
+            - configMapRef:
+                name: {{ $config.envFrom.configMapName }}
+{{- end }}
+{{- end }}
+{{- if $config.ports }}
+          ports:
+{{ toYaml $config.ports | nindent 12 }}
+{{- end }}
+{{- if $config.probes }}
+{{- if $config.probes.readiness }}
+          readinessProbe:
+{{ toYaml $config.probes.readiness | nindent 12 }}
+{{- end }}
+{{- if $config.probes.liveness }}
+          livenessProbe:
+{{ toYaml $config.probes.liveness | nindent 12 }}
+{{- end }}
+{{- end }}
+---
+{{- end }}

@@ -1,0 +1,22 @@
+{{- range $name, $config := .Values.workloads }}
+{{- if and $config.service $config.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tm-app.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "tm-app.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  type: {{ default "ClusterIP" $config.service.type }}
+  selector:
+    {{- include "tm-app.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+  ports:
+    - name: {{ default "http" $config.service.name }}
+      port: {{ default 8000 $config.service.port }}
+      targetPort: {{ default 8000 $config.service.targetPort }}
+      protocol: {{ default "TCP" $config.service.protocol }}
+---
+{{- end }}
+{{- end }}
