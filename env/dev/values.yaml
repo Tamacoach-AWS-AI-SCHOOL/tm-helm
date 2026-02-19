@@ -1,0 +1,39 @@
+fullnameOverride: tm-app-dev
+image:
+  repository: 193629269600.dkr.ecr.ap-northeast-2.amazonaws.com/tamacoach-shared-backend
+  digest: "sha256:init-placeholder"
+workloads:
+  backend:
+    replicas: 2
+    serviceAccountName: backend-sa
+    command: ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+    ports:
+      - containerPort: 8000
+        name: http
+    service:
+      enabled: true
+      port: 8000
+      targetPort: 8000
+    hpa:
+      enabled: true
+      maxReplicas: 5
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+    envFrom:
+      secretName: tm-app-dev-backend-secret
+  worker:
+    replicas: 1
+    serviceAccountName: backend-sa
+    command: ["python", "worker.py"]
+    service:
+      enabled: false
+    hpa:
+      enabled: false
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+    envFrom:
+      secretName: tm-app-dev-worker-secret
