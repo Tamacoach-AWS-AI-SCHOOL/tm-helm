@@ -1,0 +1,18 @@
+{{- range $name, $config := .Values.workloads }}
+{{- if and $config.pdb $config.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "tm-app.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "tm-app.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  minAvailable: {{ default 1 $config.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "tm-app.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/component: {{ $name }}
+---
+{{- end }}
+{{- end }}
