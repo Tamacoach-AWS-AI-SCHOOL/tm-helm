@@ -1,5 +1,9 @@
 {{- range $name, $config := .Values.workloads }}
-{{- if and $config.service $config.service.enabled }}
+{{- $enabled := true }}
+{{- if hasKey $config "enabled" }}
+{{- $enabled = $config.enabled }}
+{{- end }}
+{{- if and $enabled $config.service $config.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
