@@ -1,4 +1,9 @@
 {{- range $name, $config := .Values.workloads }}
+{{- $enabled := true }}
+{{- if hasKey $config "enabled" }}
+{{- $enabled = $config.enabled }}
+{{- end }}
+{{- if $enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +12,7 @@ metadata:
     {{- include "tm-app.labels" $ | nindent 4 }}
     app.kubernetes.io/component: {{ $name }}
 spec:
-  replicas: {{ default 1 $config.replicas }}
+  replicas: {{ coalesce $config.replicas $config.replicaCount 1 }}
   selector:
     matchLabels:
       {{- include "tm-app.selectorLabels" $ | nindent 6 }}
@@ -60,4 +65,5 @@ spec:
 {{- end }}
 {{- end }}
 ---
+{{- end }}
 {{- end }}
