@@ -1,5 +1,21 @@
 fullnameOverride: ""
+
 image:
   repository: ""
   digest: ""
-workloads: {}
+
+workloads:
+  backend:
+    enabled: true
+    replicaCount: 1
+    command: []
+    args: []
+    envFrom:
+      secretName: ""
+  worker:
+    enabled: true
+    replicaCount: 1
+    command: []
+    args: []
+    envFrom:
+      secretName: ""

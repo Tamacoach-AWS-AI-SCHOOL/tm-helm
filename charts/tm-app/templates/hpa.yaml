@@ -1,5 +1,9 @@
 {{- range $name, $config := .Values.workloads }}
-{{- if and $config.hpa $config.hpa.enabled }}
+{{- $enabled := true }}
+{{- if hasKey $config "enabled" }}
+{{- $enabled = $config.enabled }}
+{{- end }}
+{{- if and $enabled $config.hpa $config.hpa.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
