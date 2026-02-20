@@ -1,5 +1,9 @@
 {{- range $name, $config := .Values.workloads }}
-{{- if and $config.pdb $config.pdb.enabled }}
+{{- $enabled := true }}
+{{- if hasKey $config "enabled" }}
+{{- $enabled = $config.enabled }}
+{{- end }}
+{{- if and $enabled $config.pdb $config.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
