@@ -31,7 +31,9 @@ lint_chart:
 
 kube_linter_analysis:
   stage: lint
-  image: stackrox/kube-linter:latest-alpine
+  image:
+    name: stackrox/kube-linter:latest-alpine
+    entrypoint: [""]
   script:
     - kube-linter lint "${CHART_PATH}"
 
