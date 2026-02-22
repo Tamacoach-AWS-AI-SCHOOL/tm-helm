@@ -52,3 +52,20 @@ Run:
 ```bash
 helm lint charts/tm-app
 ```
+
+## CI Cross-Repo Clone Prerequisites
+
+`tm-helm` pipeline clones private `tm-manifest` repository with `CI_JOB_TOKEN`.
+
+Configure permissions in target repository (`tm-manifest`):
+
+1. Go to `Settings > CI/CD > Job token permissions`
+2. Enable inbound CI job token access
+3. Add source project (`tm-helm`) to allowlist
+4. Ensure `read_repository` scope is allowed
+
+Clone URL pattern used by CI:
+
+```text
+https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.tamacoach.net/tamacoach/tm-manifest.git
+```
