@@ -35,7 +35,7 @@ kube_linter_analysis:
     name: stackrox/kube-linter:latest-alpine
     entrypoint: [""]
   script:
-    - kube-linter lint "${CHART_PATH}"
+    - 'if command -v kube-linter >/dev/null 2>&1; then kube-linter lint "${CHART_PATH}"; else /kube-linter lint "${CHART_PATH}"; fi'
 
 render_dev_from_manifest_values:
   stage: validate
