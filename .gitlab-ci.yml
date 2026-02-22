@@ -23,7 +23,9 @@ default:
 
 lint_chart:
   stage: lint
-  image: alpine/helm:3.15.4
+  image:
+    name: alpine/helm:3.15.4
+    entrypoint: [""]
   script:
     - helm lint --strict "${CHART_PATH}"
 
@@ -35,7 +37,9 @@ kube_linter_analysis:
 
 render_dev_from_manifest_values:
   stage: validate
-  image: alpine/helm:3.15.4
+  image:
+    name: alpine/helm:3.15.4
+    entrypoint: [""]
   before_script:
     - apk add --no-cache git
   script:
@@ -58,7 +62,9 @@ check_manifest_repo_access:
 
 render_prod_from_manifest_values:
   stage: validate
-  image: alpine/helm:3.15.4
+  image:
+    name: alpine/helm:3.15.4
+    entrypoint: [""]
   before_script:
     - apk add --no-cache git
   script:
