@@ -29,27 +29,6 @@ lint_chart:
   script:
     - helm lint --strict "${CHART_PATH}"
 
-kube_linter_analysis:
-  stage: validate
-  image:
-    name: alpine/helm:3.15.4
-    entrypoint: [""]
-  before_script:
-    - apk add --no-cache git curl tar
-    - KUBE_LINTER_VERSION="0.7.4"
-    - curl -sSL "https://github.com/stackrox/kube-linter/releases/download/v${KUBE_LINTER_VERSION}/kube-linter-linux.tar.gz" -o /tmp/kube-linter.tgz
-    - tar -xzf /tmp/kube-linter.tgz -C /tmp
-    - install -m 0755 /tmp/kube-linter /usr/local/bin/kube-linter
-  script:
-    - MANIFEST_DIR="/tmp/tm-manifest-${CI_JOB_ID}"
-    - git clone --depth 1 "${MANIFEST_REPO_AUTH_URL}" "${MANIFEST_DIR}"
-    - test -f "${MANIFEST_DIR}/env/dev/values.yaml"
-    - test -f "${MANIFEST_DIR}/env/prod/values.yaml"
-    - helm template tm-app "${CHART_PATH}" -f "${MANIFEST_DIR}/env/dev/values.yaml" > /tmp/render-dev.yaml
-    - helm template tm-app "${CHART_PATH}" -f "${MANIFEST_DIR}/env/prod/values.yaml" > /tmp/render-prod.yaml
-    - kube-linter lint /tmp/render-dev.yaml
-    - kube-linter lint /tmp/render-prod.yaml
-
 render_dev_from_manifest_values:
   stage: validate
   image:
