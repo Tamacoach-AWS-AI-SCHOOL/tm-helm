@@ -44,8 +44,8 @@ render_dev_from_manifest_values:
     - test -f "${MANIFEST_DIR}/env/dev/values.yaml"
     - helm template tm-app "${CHART_PATH}" -f "${MANIFEST_DIR}/env/dev/values.yaml" --debug > /tmp/render-dev.yaml
     - test -s /tmp/render-dev.yaml
-    - grep -q "^kind: Deployment$" /tmp/render-dev.yaml
-    - grep -q "^kind: Service$" /tmp/render-dev.yaml
+    - 'grep -q "^kind: Deployment$" /tmp/render-dev.yaml'
+    - 'grep -q "^kind: Service$" /tmp/render-dev.yaml'
 
 check_manifest_repo_access:
   stage: validate
@@ -54,7 +54,7 @@ check_manifest_repo_access:
     - apk add --no-cache git
   script:
     - echo "Checking access to tm-manifest with CI_JOB_TOKEN..."
-    - git ls-remote "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.tamacoach.net/tamacoach/tm-manifest.git" > /dev/null || (echo "Access denied. Configure target repo: Settings > CI/CD > Job token permissions (inbound allow + allowlist source project + read_repository)." && exit 1)
+    - 'git ls-remote "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.tamacoach.net/tamacoach/tm-manifest.git" > /dev/null || (echo "Access denied. Configure target repo: Settings > CI/CD > Job token permissions (inbound allow + allowlist source project + read_repository)." && exit 1)'
 
 render_prod_from_manifest_values:
   stage: validate
@@ -67,8 +67,8 @@ render_prod_from_manifest_values:
     - test -f "${MANIFEST_DIR}/env/prod/values.yaml"
     - helm template tm-app "${CHART_PATH}" -f "${MANIFEST_DIR}/env/prod/values.yaml" --debug > /tmp/render-prod.yaml
     - test -s /tmp/render-prod.yaml
-    - grep -q "^kind: Deployment$" /tmp/render-prod.yaml
-    - grep -q "^kind: Service$" /tmp/render-prod.yaml
+    - 'grep -q "^kind: Deployment$" /tmp/render-prod.yaml'
+    - 'grep -q "^kind: Service$" /tmp/render-prod.yaml'
 
 validate_chart_metadata:
   stage: validate
