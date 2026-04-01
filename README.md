@@ -5,6 +5,15 @@ Helm chart template repository for `tm-app`.
 This repository only contains reusable chart templates.
 Environment-specific values and Kubernetes resources (for example `dev`, `prod`, IRSA, ExternalSecret, TargetGroupBinding) must be managed in a separate manifest/config repository.
 
+| Repository | Role |
+|------------|------|
+| [tm-infra](https://github.com/Tamacoach-AWS-AI-SCHOOL/tm-infra) | Terraform IaC |
+| [tm-manifest](https://github.com/Tamacoach-AWS-AI-SCHOOL/tm-manifest) | ArgoCD GitOps source — deployment state |
+| **tm-helm** (current) | Helm chart templates |
+| [tm-backend](https://github.com/Tamacoach-AWS-AI-SCHOOL/tm-backend) | Django backend |
+| [tm-frontend](https://github.com/Tamacoach-AWS-AI-SCHOOL/tm-frontend) | Vue frontend |
+| [tm-agent](https://github.com/Tamacoach-AWS-AI-SCHOOL/tm-agent) | AI Multi-Agent |
+
 ## Structure
 
 ```text
